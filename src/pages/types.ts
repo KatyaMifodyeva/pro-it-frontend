@@ -12,3 +12,24 @@ export const monthNamesEnToRu: Record<string, string> = {
     July: 'Июль',
     August: 'Август',
   };
+
+
+  
+  export interface Document {
+    id: number;
+    sender: string;
+    // senderEmail: string;
+    receiver: string;
+    // receiverEmail: string;
+    type: string;
+    date: string;
+    status: string;
+  }
+  export const tabToStatusMap: { [key: string]: string } = {
+    'Все': '',
+    'Важные': 'Важные',
+    'Ждет подписи': 'Ждет подписи',
+    'Подписанные': 'Подписан',
+    'Отправленные': 'Отправлен',
+    'Удаленные': 'Удален',
+  };

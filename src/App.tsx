@@ -18,6 +18,7 @@ import NavBar from './_components/Dashboard/Navbar';
 import Schedule from './pages/Schedule';
 import AttendanceTable from './pages/Posech';
 import FinanceTable from './pages/FinanceTable';
+import TabMenu from './pages/TabMenu';
 
 
 
@@ -60,6 +61,7 @@ const App: React.FC = () => {
               <Route path="finances" element={<ListFinances />} />
               <Route path="finance-table" element={<FinanceTable />} />
               <Route path="documents" element={<ListDocuments />} />
+             
             </Route>
 
           </>

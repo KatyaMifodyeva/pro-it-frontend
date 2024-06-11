@@ -1,3 +1,4 @@
+import jsPDF from "jspdf";
 
 export interface Student {
     code: string;
@@ -223,16 +224,50 @@ export interface Student {
 
 
 
+
+// Создаем функцию для создания PDF и возвращения его в виде объекта File
+const createPDFFile = (content: string | string[], fileName: string) => {
+  // Создаем новый экземпляр jsPDF
+  const doc = new jsPDF();
+
+  // Добавляем текст в PDF с помощью метода text()
+  doc.text(content, 10, 10);
+
+  // Получаем данные PDF как Data URL
+  const dataURL = doc.output("datauristring");
+
+  // Преобразуем Data URL в Blob
+  const blob = dataURLtoBlob(dataURL);
+
+  // Создаем объект File из Blob
+  return new File([blob], fileName, { type: "application/pdf" });
+};
+
+// Преобразуем Data URL в Blob
+const dataURLtoBlob = (dataURL: string) => {
+  const byteString = atob(dataURL.split(",")[1]);
+  const arrayBuffer = new ArrayBuffer(byteString.length);
+  const uint8Array = new Uint8Array(arrayBuffer);
+  for (let i = 0; i < byteString.length; i++) {
+    uint8Array[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([uint8Array], { type: "application/pdf" });
+};
+
+const content = "Содержимое файла 1";
+const fileName = "file1.pdf";
+const pdfFile = createPDFFile(content, fileName);
+
   export const documents = [
-    { id: 1, sender: 'Иванов Иван', receiver: 'Петров Петр', type: 'Заявление на отпуск', date: '10:15', status: 'Ждет подписи' },
-    { id: 2, sender: 'Иванов Иван', receiver: 'Петров Петр', type: 'Счет на оплату', date: '11:30', status: 'Подписан' },
-    { id: 3, sender: 'Иванов Иван', receiver: 'Петров Петр', type: 'Отчет о выполненной работе', date: '09:45', status: 'Отклонен' },
-    { id: 4, sender: 'Петров Петр', receiver: 'Иванов Иван', type: 'Счет-фактура', date: '14:20', status: 'Ждет подписи' },
-    { id: 5, sender: 'Петров Петр', receiver: 'Иванов Иван', type: 'Заявление на компенсацию', date: '16:55', status: 'Подписан' },
-    { id: 6, sender: 'Петров Петр', receiver: 'Иванов Иван', type: 'Уведомление о собрании', date: '08:00', status: 'Ждет подписи' },
-    { id: 7, sender: 'Сидоров Иван', receiver: 'Иванов Иван', type: 'Платежное поручение', date: '13:10', status: 'Отклонен' },
-    { id: 8, sender: 'Сидоров Иван', receiver: 'Иванов Иван', type: 'Приказ о назначении', date: '12:25', status: 'Ждет подписи' },
-    { id: 9, sender: 'Сидоров Иван', receiver: 'Иванов Иван', type: 'Заявление на материальную помощь', date: '10:50', status: 'Отправлен' }
+    { id: 1, sender: 'Иванов Иван', receiver: 'Петров Петр', type: 'Заявление на отпуск', date: '10:15', status: 'Ждет подписи' ,file:new File(["Содержимое файла 1"], "file1.txt", { type: "text/plain" })},
+    { id: 2, sender: 'Иванов Иван', receiver: 'Петров Петр', type: 'Счет на оплату', date: '11:30', status: 'Подписан',file:null },
+    { id: 3, sender: 'Иванов Иван', receiver: 'Петров Петр', type: 'Отчет о выполненной работе', date: '09:45', status: 'Отклонен' ,file:null},
+    { id: 4, sender: 'Петров Петр', receiver: 'Иванов Иван', type: 'Счет-фактура', date: '14:20', status: 'Ждет подписи',file:new File([process.env.PUBLIC_URL+'/assets/files/file_2.pdf'],'fileName.pdf',{type:'application/pdf'}) },
+    { id: 5, sender: 'Петров Петр', receiver: 'Иванов Иван', type: 'Заявление на компенсацию', date: '16:55', status: 'Подписан' ,file:null},
+    { id: 6, sender: 'Петров Петр', receiver: 'Иванов Иван', type: 'Уведомление о собрании', date: '08:00', status: 'Ждет подписи' ,file:pdfFile},
+    { id: 7, sender: 'Сидоров Иван', receiver: 'Иванов Иван', type: 'Платежное поручение', date: '13:10', status: 'Отклонен',file:null },
+    { id: 8, sender: 'Сидоров Иван', receiver: 'Иванов Иван', type: 'Приказ о назначении', date: '12:25', status: 'Ждет подписи',file:null },
+    { id: 9, sender: 'Сидоров Иван', receiver: 'Иванов Иван', type: 'Заявление на материальную помощь', date: '10:50', status: 'Отправлен',file:null }
   ];
   
   function getSentDocuments(person: string) {

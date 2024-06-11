@@ -24,6 +24,7 @@ export const monthNamesEnToRu: Record<string, string> = {
     type: string;
     date: string;
     status: string;
+    file: File | null; // Добавляем поле для хранения файла
   }
   export const tabToStatusMap: { [key: string]: string } = {
     'Все': '',
